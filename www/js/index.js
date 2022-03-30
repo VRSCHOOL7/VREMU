@@ -25,5 +25,30 @@ function onDeviceReady() {
     // Cordova is now initialized. Have fun!
 
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-    document.getElementById('deviceready').classList.add('ready');
+    $("#loginButton").on("click", function(){
+        $.ajax({
+            method: "GET",
+            url: $('#url').val(),
+            data : {"PIN" : $('#pin').val()},
+            dataType: "json",   // necessitem aixo pq ens retorni un objecte JSON
+        }).done(function (dades) {
+            console.log($("#pin").val());
+            if (dades["status"] == "OK"){
+                localStorage.setItem("pin_container", $('#pin').val());
+                localStorage.setItem("VRexID_container", dades["VRexerciseID"]);
+                location.href = "finishVRExercise.html";
+                
+            }
+            else{
+                alert("PIN incorrecte");
+            }
+            //let newElement = $("<a id='listelement' class='collection-item' href='#!'>"+msg[item]+"</a>");
+        }).fail(function () {
+            console.log( $('#url').val());
+            alert("ERROR");
+            
+        });
+        
+        return false;
+    });
 }
